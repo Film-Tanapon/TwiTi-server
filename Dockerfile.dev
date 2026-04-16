@@ -1,0 +1,16 @@
+FROM golang:1.25.7-alpine
+
+WORKDIR /app
+
+# ติดตั้งเครื่องมือ Air สำหรับทำ Hot-reload
+RUN go install github.com/air-verse/air@latest
+
+# ก๊อปปี้แค่ไฟล์จัดการ Library มาก่อน
+COPY go.mod go.sum ./
+RUN go mod download
+
+# สังเกตว่าเราจะไม่ COPY โค้ดทั้งหมด และจะไม่ใช้คำสั่ง go build แล้ว
+# เพราะเราจะจำลอง (Mount) ไฟล์จากเครื่องคอมฯ เราเข้าไปตรงๆ แทน
+
+# ให้ Air เป็นตัวรันแอปแทน
+CMD ["air"]
